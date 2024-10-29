@@ -2,26 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+.animaRight{
+    animation : animaRight .4s ease-in-out
 }
 
-@media (prefers-color-scheme: dark) {
+body{
+    background-color: #f2f4f675;
+}
+
+@keyframes animaRight {
+    0%{
+        opacity: 0;
+        transform: translate3d(100px,0,0);
+    }
+    100%{
+        opacity: 1;
+        transform: translate3d(0,0,0);
+    }
+}
+
+
+.animaLeft{
+    animation : animaLeft .4s ease-in-out
+}
+
+@keyframes animaLeft {
+    0%{
+        opacity: 0;
+        transform: translate3d(-100px,0,0);
+    }
+    100%{
+        opacity: 1;
+        transform: translate3d(0,0,0);
+    }
+}
+
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+        --radius : 0.5rem
+    }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+input{
+    color: rgba(128, 128, 128, 0.829);
+    outline: none;
 }
