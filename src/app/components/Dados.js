@@ -20,7 +20,7 @@ const Dados = () => {
     const [complemento, setComplemento] = useState("");
     const [referencia, setReferencia] = useState("");
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
+
 
     async function getUser() {
         const token = await getToken();
@@ -84,7 +84,7 @@ const Dados = () => {
         setLoading(true);
         try {
             const response = await fetch("/api/update-user", {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
                 },

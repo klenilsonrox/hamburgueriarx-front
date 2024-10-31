@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { MdArrowOutward } from 'react-icons/md';
 import { getToken } from '@/app/actions/getToken';
-import { io } from 'socket.io-client';
 import { baseURl } from '../../../../../../baseUrl';
 
 
@@ -12,12 +11,7 @@ const PedidoDetalhe = ({ params }) => {
   const [status,setStatus] = useState(null);
   // Função para buscar o pedido por ID
 
-  useEffect(()=>{
-    if(status){
-      audioAlert.play();
-    alert(`o Status do seu pedido foi atualizado para: ${status}`)
-    }
-  },[status])
+
 
   async function fetchPedido() {
     const token = await getToken();
