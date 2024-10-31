@@ -37,7 +37,7 @@ const Checkout = () => {
                 console.log(data._id);
 
                 const numero = "+5531992311170"; // Número do cliente
-                const link = `https://hamburgueriarx.vercel.app/conta/pedidos/${data._id}`; // Link do pedido
+                const link = `https://hamburgueriarx.vercel.app/pedidos/${data._id}`; // Link do pedido
                 const mensagem = `Olá, boa noite, acabei de fazer esse pedido: ${link}`;
                 const whatsappUrl = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
 
