@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { MdArrowOutward } from 'react-icons/md';
 import { getToken } from '@/app/actions/getToken';
 import { baseURl } from '../../../../../baseUrl';
+import Header from '@/app/components/Header';
 
 
 const PedidoDetalhe = ({ params }) => {
@@ -65,6 +66,8 @@ const PedidoDetalhe = ({ params }) => {
 
 
   return (
+    <>
+    <Header />
     <div className="p-4 max-w-7xl mx-auto">
       <div className="bg-white shadow-lg rounded-lg p-6">
         <h2 className="text-2xl font-bold mb-4">Detalhes do Pedido</h2>
@@ -119,6 +122,7 @@ const PedidoDetalhe = ({ params }) => {
         </a>
       </div>
     </div>
+    </>
   );
 };
 
