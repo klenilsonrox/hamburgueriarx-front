@@ -106,6 +106,7 @@ const Delivery = () => {
                 }, 500);
                 return;
             }
+            console.log(data)
         } catch (error) {
             console.log(error);
         } finally {

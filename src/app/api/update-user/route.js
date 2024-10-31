@@ -18,7 +18,7 @@ export const POST = async (request) => {
       body: JSON.stringify({name,whatsapp,cep,rua,numero,bairro,cidade,complemento,referencia  }),
     });
 
-    console.log(response.status)
+
 
     const data = await response.json();
 

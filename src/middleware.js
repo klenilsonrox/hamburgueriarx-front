@@ -1,24 +1,25 @@
 import { NextResponse } from 'next/server';
-import { jwtVerify } from 'jose'; // Importando a função jwtVerify da biblioteca jose
+import { jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
 // Defina as rotas protegidas
-const protectedRoutes = ['/conta', '/admin']; // Inclua '/admin' nas rotas protegidas
-const loginRoute = '/auth/entrar'; // Página de login
+const protectedRoutes = ['/conta', '/admin'];
+const loginRoute = '/auth/entrar';
 
 export async function middleware(req) {
   const { nextUrl } = req;
-  const token = cookies().get('token')?.value; // Pegando o valor do token dos cookies
+  const token = cookies().get('token')?.value;
 
-  // Se o usuário tentar acessar a página de login e já estiver autenticado, redirecione para a página de conta
-  if (nextUrl.pathname === loginRoute && token) {
-    try {
-      const secret = new TextEncoder().encode(process.env.SECRET_KEY);
-      await jwtVerify(token, secret);
-
-      return NextResponse.redirect(new URL('/cardapio', req.url));
-    } catch (error) {
-      console.log("Token inválido ou expirado, permitindo acesso à página de login.");
+  // Se o usuário tentar acessar a página de login e já estiver autenticado
+  if (nextUrl.pathname === loginRoute) {
+    if (token) {
+      try {
+        const secret = new TextEncoder().encode(process.env.SECRET_KEY);
+        await jwtVerify(token, secret);
+        return NextResponse.redirect(new URL('/cardapio', req.url));
+      } catch (error) {
+        console.log("Token inválido ou expirado, permitindo acesso à página de login.");
+      }
     }
   }
 
@@ -34,7 +35,7 @@ export async function middleware(req) {
 
       // Verifique se o usuário está tentando acessar uma rota de admin e se ele não é admin
       if (nextUrl.pathname.startsWith('/admin') && !payload.isAdmin) {
-        return NextResponse.redirect(new URL('/403', req.url)); // Redireciona para uma página de acesso negado (ou personalize conforme necessário)
+        return NextResponse.redirect(new URL('/403', req.url));
       }
 
       return NextResponse.next();
@@ -44,11 +45,11 @@ export async function middleware(req) {
     }
   }
 
-  if (token && (nextUrl.pathname === loginRoute || nextUrl.pathname.startsWith('/auth'))) {
+  // Se o token existir e o usuário estiver acessando uma rota de autenticação
+  if (token && (nextUrl.pathname.startsWith('/auth'))) {
     try {
       const secret = new TextEncoder().encode(process.env.SECRET_KEY);
       await jwtVerify(token, secret);
-
       return NextResponse.redirect(new URL('/cardapio', req.url));
     } catch (error) {
       console.log("Token inválido ou expirado, permitindo acesso à página de login.");
