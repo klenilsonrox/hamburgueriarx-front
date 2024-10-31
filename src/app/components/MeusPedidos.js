@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useRouter } from 'next/navigation'
 
 const statusColors = {
   PENDENTE: 'bg-yellow-500',
@@ -25,6 +26,7 @@ const statusColors = {
 const MeusPedidos= () => {
   const [pedidos, setPedidos] = useState([])
   const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
 
   useEffect(() => {
@@ -34,6 +36,18 @@ const MeusPedidos= () => {
   const getPedidos = async () => {
     const token = await getToken()
     setLoading(true)
+  const response = await fetch('/api/infos', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+  })
+
+  if(response.status===400){
+    router.push('/auth/entrar')
+  }
+
     try {
       const response = await fetch(`/api/pedidos`, {
         method: 'GET',
