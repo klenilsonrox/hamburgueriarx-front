@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { MdArrowOutward } from 'react-icons/md';
 import { getToken } from '@/app/actions/getToken';
-import { baseURl } from '../../../../../../baseUrl';
+import { baseURl } from '../../../../../baseUrl';
 
 
 const PedidoDetalhe = ({ params }) => {
@@ -114,7 +114,7 @@ const PedidoDetalhe = ({ params }) => {
 
       {/* Botão para Voltar */}
       <div className="mt-6">
-        <a href="/conta/pedidos" className="text-red-600 font-bold flex items-center gap-2">
+        <a href="/pedidos" className="text-red-600 font-bold flex items-center gap-2">
           Voltar para Meus Pedidos <MdArrowOutward />
         </a>
       </div>
