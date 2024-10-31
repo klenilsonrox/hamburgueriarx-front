@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Cadastro from './Cadastro';
 import Input from './Input';
 import AlertLogin from './AlertLogin';
+import { baseURl } from '../../../baseUrl';
 
 const Delivery = () => {
     const [user, setUser] = useState(null);
@@ -86,10 +87,12 @@ const Delivery = () => {
 
         setLoading(true);
         try {
-            const response = await fetch("/api/update-user", {
-                method: 'POST',
+            const token = await getToken()
+            const response = await fetch(`${baseURl}/users`, {
+                method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({ name, whatsapp, cep, rua, numero, bairro, cidade, complemento, referencia }),
             });
@@ -102,11 +105,11 @@ const Delivery = () => {
             if (response.status === 200) {
                 toast.success("Dados atualizados");
                 setTimeout(() => {
-                    window.location.href = "/conta/checkout";
+                    window.location.href = "/checkout";
                 }, 500);
                 return;
             }
-            console.log(data)
+            console.log(response)
         } catch (error) {
             console.log(error);
         } finally {
