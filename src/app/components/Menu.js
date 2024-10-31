@@ -66,7 +66,7 @@ const Menu = () => {
                                     <p className='px-4 py-2 text-lg font-medium text-gray-800'>Olá, {user.name}</p>
                                     <ul className='py-2'>
                                         <li><Link href="/pedidos" className='block px-4 py-2 hover:text-red-500 transition duration-300'>Pedidos</Link></li>
-                                        <li><Link href="/conta/dados-cadastrais" className='block px-4 py-2 hover:text-red-500 transition duration-300'>Meus dados</Link></li>
+                                        <li><Link href="/dados-cadastrais" className='block px-4 py-2 hover:text-red-500 transition duration-300'>Meus dados</Link></li>
                                         <li className='block px-4 py-2 text-lg cursor-pointer hover:text-red-500 transition duration-300' onClick={handleLogout}>Sair</li>
                                     </ul>
                                 </div>
