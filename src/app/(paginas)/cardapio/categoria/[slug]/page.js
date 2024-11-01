@@ -9,12 +9,13 @@ import {
     DialogHeader,
     DialogTitle,
     DialogDescription,
-    DialogClose
+    DialogClose 
   } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from '@/app/contexts/CartContext';
 import Link from 'next/link';
+import Image from 'next/image';
 
 
 const page = ({ params }) => {
@@ -120,7 +121,7 @@ const page = ({ params }) => {
                             >
                                 <div className="relative h-48 w-full">
                                     {produto.imageUrl ? (
-                                        <img
+                                        <Image
                                             src={produto.imageUrl}
                                             alt={produto.name}
                                             layout="fill"

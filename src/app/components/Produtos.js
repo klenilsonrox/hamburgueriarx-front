@@ -3,9 +3,8 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '../contexts/CartContext';
-import { MdOutlineShoppingCart, MdRestaurant, MdClose, MdAdd, MdRemove } from "react-icons/md";
+import { MdOutlineShoppingCart, MdRestaurant, MdAdd, MdRemove } from "react-icons/md";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import {
