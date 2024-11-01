@@ -36,6 +36,12 @@ export default function Login() {
       })
 
       const data = await response.json()
+      
+      if(data.isAdmin) {
+         setTimeout(() => {
+          router.push("/admin")
+        }, 500)
+      }
 
       if (data.error) {
         toast.error(data.error || "Erro ao entrar")

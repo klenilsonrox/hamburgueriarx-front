@@ -103,9 +103,13 @@ const Menu = () => {
                             </>
                         )}
                         {user && (
+                            <>
+                             <li><Link href="/pedidos" className='block  hover:text-red-500 transition duration-300'>Pedidos</Link></li>
+                             <li><Link href="/dados-cadastrais" className='block hover:text-red-500 transition duration-300'>Meus dados</Link></li>
                             <li className='cursor-pointer' onClick={handleLogout}>
                                 <span className='block text-gray-700 hover:text-red-600 transition duration-300'>Sair</span>
                             </li>
+                            </>
                         )}
                     </ul>
                 </div>

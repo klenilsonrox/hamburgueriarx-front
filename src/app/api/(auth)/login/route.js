@@ -16,6 +16,12 @@ export const POST = async (request) => {
 
     const data = await response.json();
 
+   if(response.status===200){
+    return new Response(JSON.stringify(data), {
+      status: 200,
+    });
+   }
+
     if (data.error) {
       return new Response(JSON.stringify(data), {
         status: 400,

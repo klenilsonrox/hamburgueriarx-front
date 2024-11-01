@@ -42,9 +42,26 @@ const PedidoDetalhe = ({ params }) => {
   }, []); // Apenas 'params.id' como dependência para inicialização
 
   if (loading) {
-    return  <div className='w-full max-w-7xl mx-auto p-4'>
-    <p>Carregando pedido...</p>
-  </div>
+    return  <>
+    <Header />
+    <div className='w-full max-w-7xl mx-auto p-4 bg-white rounded-md mt-4'>
+      <h1 className='w-[250px] h-[30px] bg-gray-200 rounded-md animate-pulse duration-700'></h1>
+      <h1 className='w-[230px] h-[30px] bg-gray-200 mt-6  rounded-md animate-pulse duration-700'></h1>
+      <h1 className='w-[238px] h-[30px] bg-gray-200 mt-3  rounded-md animate-pulse duration-700'></h1>
+      <h1 className='w-[238px] h-[30px] bg-gray-200 mt-3  rounded-md animate-pulse duration-700'></h1>
+      <h1 className='w-[238px] h-[30px] bg-gray-200 mt-3  rounded-md animate-pulse duration-700'></h1>
+      <h1 className='w-[155px] h-[30px] bg-gray-200 mt-8  rounded-md animate-pulse duration-700'></h1>
+      <h1 className='w-[125px] h-[30px] bg-gray-200 mt-3  rounded-md animate-pulse duration-700'></h1>
+      <h1 className='w-[125px] h-[30px] bg-gray-200 mt-8  rounded-md animate-pulse duration-700'></h1>
+      <div className='flex ga-2 items-center'>
+        <div className='w-[90px] h-[90px] bg-gray-200 mt-8  rounded-md animate-pulse duration-700'></div>
+        <div className='ml-2'>
+        <h1 className='w-[125px] h-[30px] bg-gray-200 mt-3  rounded-md animate-pulse duration-700'></h1>
+        <h1 className='w-[125px] h-[30px] bg-gray-200 mt-3  rounded-md animate-pulse duration-700'></h1>
+        </div>
+      </div>
+    </div>
+    </>
   }
 
   if (!pedido) {
@@ -68,11 +85,16 @@ const PedidoDetalhe = ({ params }) => {
   return (
     <>
     <Header />
+
+    
+
     <div className="p-4 max-w-7xl mx-auto">
       <div className="bg-white shadow-lg rounded-lg p-6">
         <h2 className="text-2xl font-bold mb-4">Detalhes do Pedido</h2>
 
         {/* Informações do Usuário */}
+
+        
         <div className="mb-6">
           <h3 className="text-lg font-semibold">Informações do Cliente</h3>
           <p className="text-gray-700"><strong>Nome:</strong> {pedido.user?.name}</p>
