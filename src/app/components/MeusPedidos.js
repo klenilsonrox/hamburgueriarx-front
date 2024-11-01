@@ -38,13 +38,10 @@ const MeusPedidos= () => {
   const getPedidos = async () => {
     const token = await getToken()
     setLoading(true)
-  const response = await fetch('/api/infos', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-  })
+  const response = await fetch('/api/infos')
+
+  const data = await response.json()
+  console.log(data)
 
   if(response.status===400){
     router.push('/auth/entrar')
@@ -64,6 +61,7 @@ const MeusPedidos= () => {
       }
 
       const data = await response.json()
+ 
       setPedidos(data.minhasOrders.reverse())
     } catch (error) {
       console.error(error)
