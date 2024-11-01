@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 import 'react-toastify/dist/ReactToastify.css'
@@ -10,12 +10,31 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { getToken } from '../actions/getToken'
 
 export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+
+
+  async function getUser(){
+    const token = await getToken()
+    const response = await fetch(`${baseURl}/users/infos`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    })
+
+    console.log(response)
+
+  }
+
+  useEffect(()=>{
+    getUser
+  },[])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -34,8 +53,6 @@ export default function Login() {
         },
         body: JSON.stringify({ email, password }),
       })
-
-      console.log(response)
 
       const data = await response.json()
       
