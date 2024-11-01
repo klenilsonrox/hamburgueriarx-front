@@ -2,57 +2,66 @@ import { NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
-const protectedRoutes = ['/conta', '/pedidos', '/dados-cadastrais', '/admin'];
-const authRoutes = ['/auth/entrar', '/auth/cadastrar', '/auth/esqueci-senha', '/auth/resetar-senha'];
+// Defina as rotas protegidas
+const protectedRoutes = ['/conta'];
+const loginRoute = '/auth/entrar';
 
 export async function middleware(req) {
   const { nextUrl } = req;
   const token = cookies().get('token')?.value;
 
-  if (token) {
+  // Se o usuário tentar acessar a página de login e já estiver autenticado
+  if (nextUrl.pathname === loginRoute) {
+    if (token) {
+      try {
+        const secret = new TextEncoder().encode(process.env.SECRET_KEY);
+        await jwtVerify(token, secret);
+        return NextResponse.redirect(new URL('/cardapio', req.url));
+      } catch (error) {
+        console.log("Token inválido ou expirado, permitindo acesso à página de login.");
+      }
+    }
+  }
+
+
+  // Verifique se o token existe e o usuário está tentando acessar uma página protegida
+  if (protectedRoutes.some(route => nextUrl.pathname.startsWith(route))) {
+
+    if (!token) {
+      return NextResponse.redirect(new URL('/auth/entrar', req.url));
+    }
+
     try {
       const secret = new TextEncoder().encode(process.env.SECRET_KEY);
-      const payload = await jwtVerify(token, secret);
+      const { payload } = await jwtVerify(token, secret);
 
-      // Redireciona para /admin se o usuário for admin
-      if (payload.payload.isAdmin && !nextUrl.pathname.startsWith('/admin')) {
-        return NextResponse.redirect(new URL('/admin', req.url));
+      // Verifique se o usuário está tentando acessar uma rota de admin e se ele não é admin
+      if (nextUrl.pathname.startsWith('/admin') && !payload.isAdmin) {
+        return NextResponse.redirect(new URL('/403', req.url));
       }
 
-      // Redireciona para /cardapio se o usuário tentar acessar uma rota de autenticação
-      if (authRoutes.includes(nextUrl.pathname)) {
-        return NextResponse.redirect(new URL('/cardapio', req.url));
-      }
-
-      // Adiciona o payload aos headers de resposta para reutilização
-      const response = NextResponse.next();
-      response.headers.set('x-auth-payload', Buffer.from(JSON.stringify(payload)).toString('base64'));
-      return response;
-
+      return NextResponse.next();
     } catch (error) {
-      console.error("Token inválido ou expirado:", error.message);
+      console.error("Erro ao verificar o token:", error.message);
       return NextResponse.redirect(new URL('/auth/entrar', req.url));
     }
   }
 
-  // Redireciona para /auth/entrar se a rota for protegida e o token não estiver presente
-  if (protectedRoutes.some(route => nextUrl.pathname.startsWith(route)) && !token) {
-    return NextResponse.redirect(new URL('/auth/entrar', req.url));
+  // Se o token existir e o usuário estiver acessando uma rota de autenticação
+  if (token && (nextUrl.pathname.startsWith('/auth'))) {
+    try {
+      const secret = new TextEncoder().encode(process.env.SECRET_KEY);
+      await jwtVerify(token, secret);
+      return NextResponse.redirect(new URL('/cardapio', req.url));
+    } catch (error) {
+      console.log("Token inválido ou expirado, permitindo acesso à página de login.");
+    }
   }
 
   return NextResponse.next();
 }
 
-// Configuração do matcher para rotas específicas
+// Defina em quais caminhos o middleware será aplicado
 export const config = {
-  matcher: [
-    '/conta/:path*', 
-    '/pedidos/:path*', 
-    '/dados-cadastrais/:path*', 
-    '/admin/:path*', 
-    '/auth/entrar', 
-    '/auth/cadastrar', 
-    '/auth/esqueci-senha', 
-    '/auth/resetar-senha'
-  ],
+  matcher: ['/conta/:path*', '/auth/entrar', '/auth/esqueci-senha', '/auth/cadastrar', '/auth/:path*', '/admin/:path*'],
 };
