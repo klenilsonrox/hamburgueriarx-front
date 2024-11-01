@@ -2,16 +2,20 @@ import { NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
-const protectedRoutes = ['/conta', '/pedidos', '/dados-cadastrais', '/admin'];
+const protectedRoutes = ['/pedidos', '/dados-cadastrais', '/admin'];
 const loginRoute = '/auth/entrar';
 
 export async function middleware(req) {
   const { nextUrl } = req;
   const token = cookies().get('token')?.value;
 
+
+
+
   // Tentar verificar o token antes de redirecionar
   let isValidToken = false;
   let payload;
+
 
   if (token) {
     try {
@@ -44,6 +48,7 @@ export async function middleware(req) {
     return NextResponse.redirect(new URL('/cardapio', req.url));
   }
 
+
   return NextResponse.next();
 }
 
@@ -51,7 +56,7 @@ export async function middleware(req) {
 export const config = {
   matcher: [
     '/conta', 
-    '/pedidos', 
+    '/pedidos/:path*', 
     '/dados-cadastrais', 
     '/admin', 
     '/auth/entrar', 
@@ -59,3 +64,37 @@ export const config = {
     '/auth/cadastrar'
   ],
 };
+
+
+
+// export async function middleware(request) {
+//   const token =cookies.get("token");
+
+//   const protectedRoutes = ['/pedidos', '/dados-cadastrais', '/admin'];
+//   const authRoutes = ['/auth/entrar', '/auth/cadastrar'];
+//   const isProtectedRoute = protectedRoutes.includes(request.nextUrl.pathname);
+//   const isAuthRoute = authRoutes.includes(request.nextUrl.pathname);
+
+//   if (isProtectedRoute && !token) {
+//       return NextResponse.redirect(new URL("/auth/entrar", request.url));
+//   }
+
+//   if (token) {
+//         try {
+//           const secret = new TextEncoder().encode(process.env.SECRET_KEY);
+//           const { payload: verifiedPayload } = await jwtVerify(token, secret);
+//           isValidToken = true;
+//           payload = verifiedPayload;
+//           console.log("asdasdsad")
+//         } catch (error) {
+//           console.log("Erro ao verificar o token:", error.message);
+//         }
+//       }
+
+//   if (isAuthRoute && token) {
+//       return NextResponse.redirect(new URL("/cardapio", request.url));
+//   }
+
+//   return NextResponse.next();
+// }
+

@@ -27,15 +27,17 @@ const PedidoDetalhe = ({ params }) => {
 
 
       const data = await response.json();
-      console.log(data)
+      console.log(data.order)
       if (response.status === 200) {
-        setPedido(data.order);
+        setPedido(data);
       }
     } catch (error) {
       console.error('Erro ao buscar o pedido:', error);
     }
     setLoading(false);
   }
+
+  console.log(pedido)
 
   // UseEffect para inicializar o pedido e configurar o socket
   useEffect(() => {
