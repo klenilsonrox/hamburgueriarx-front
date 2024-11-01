@@ -31,7 +31,7 @@ export const CartProvider = ({ children }) => {
       imageUrl: product.imageUrl,
       price: product.price,
       quantity: qtd,
-      observacao: observacao,
+      observacao
     };
 
     const productInCart = cart.find(item => item.productId === product.id);

@@ -16,12 +16,7 @@ export const POST = async (request) => {
 
     const data = await response.json();
 
-   if(response.status===200){
-    return new Response(JSON.stringify(data), {
-      status: 200,
-    });
-   }
-
+console.log(response)
     if (data.error) {
       return new Response(JSON.stringify(data), {
         status: 400,
@@ -34,11 +29,16 @@ export const POST = async (request) => {
       });
     }
 
+
     if (response.status===200) {
       cookies().set('token', data.token, {
         maxAge: 60 * 60 * 24 * 7, // 7 dias
         httpOnly: true,
         secure: true,
+      });
+
+      return new Response(JSON.stringify(data), {
+        status: 200,
       });
     }
 

@@ -46,7 +46,7 @@ const Checkout = () => {
 
                 localStorage.setItem("cart", JSON.stringify([]));
                 setTimeout(() => {
-                    router.push(`/conta/pedidos/${data._id}`);
+                    router.push(`/pedidos/${data._id}`);
                 }, 3000); // Ajustar o tempo conforme necessário
             } else {
                 toast.error("Erro ao realizar o pedido");

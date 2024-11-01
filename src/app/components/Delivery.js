@@ -25,7 +25,7 @@ const Delivery = () => {
 
     async function getUser() {
         const token = await getToken();
-        const response = await fetch('/api/infos', {
+        const response = await fetch(`${baseURl}/users/infos`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",

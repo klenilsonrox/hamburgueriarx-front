@@ -35,6 +35,8 @@ export default function Login() {
         body: JSON.stringify({ email, password }),
       })
 
+      console.log(response)
+
       const data = await response.json()
       
       if(data.isAdmin) {
@@ -46,7 +48,7 @@ export default function Login() {
       if (data.error) {
         toast.error(data.error || "Erro ao entrar")
       } 
-      if (response.status === 201) {
+      if (response.status === 200) {
         toast.success("Login realizado")
         setEmail("")
         setPassword("")
