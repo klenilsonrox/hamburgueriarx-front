@@ -161,7 +161,7 @@ const MeusPedidos= () => {
                   Total: R$ {calcularTotalPedido(pedido.products).toFixed(2)}
                 </p>
                 <Button asChild>
-                  <Link href={`/pedidos/${pedido._id}`} className='bg-red-600'>
+                  <Link href={`/pedidos/${pedido._id}`} className='bg-red-600 hover:bg-red-700'>
                     Ver pedido <MdArrowOutward className="ml-2" />
                   </Link>
                 </Button>
