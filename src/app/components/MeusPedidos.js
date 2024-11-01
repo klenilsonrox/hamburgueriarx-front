@@ -61,7 +61,6 @@ const MeusPedidos= () => {
       }
 
       const data = await response.json()
- console.log(data)
       setPedidos(data.minhasOrders.reverse())
     } catch (error) {
       console.error(error)

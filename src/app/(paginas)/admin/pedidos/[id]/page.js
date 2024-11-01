@@ -8,11 +8,14 @@ import Link from 'next/link'
 import { baseURl } from '../../../../../../baseUrl'
 import { useEffect, useState } from 'react'
 import { loadGetInitialProps } from 'next/dist/shared/lib/utils'
+import { useRouter } from 'next/navigation'
 
 
 
 export default  function OrderPage({ params }) {
   const [order, setOrder] = useState([])
+  const router = useRouter()
+  const [total,setTotal] = useState(0)
 
   async function getOrder() {
     const token = await getToken()
@@ -24,8 +27,13 @@ export default  function OrderPage({ params }) {
   })
 
   const data = await res.json()
-console.log(data)
+
+if(data.error==="Nenhum pedido encontrado"){
+  router.push('/admin/pedidos')
+}
 setOrder(data)
+const totalValue = data.products.map(prod=>prod.price * prod.quantity).reduce((acc, curr) => acc + curr, 0)
+setTotal(totalValue)
 
 }
 
@@ -55,9 +63,8 @@ useEffect(()=>{
     return <p>Carregando...</p>
   }
 
-  console.log(order)
 
-  // const totalPrice = order.products.reduce((sum, product) => sum + product.price * product.quantity, 0)
+
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
@@ -105,7 +112,7 @@ useEffect(()=>{
             </div>
             <div>
               <h2 className="text-xl font-semibold">Total do Pedido</h2>
-              {/* <p className="text-2xl font-bold">R$ {totalPrice.toFixed(2)}</p> */}
+              <p className="text-2xl font-bold">R$ {total.toFixed(2)}</p>
             </div>
             <div className="text-sm text-gray-600">
               <p>Criado em: {formatDate(order.createdAt)}</p>

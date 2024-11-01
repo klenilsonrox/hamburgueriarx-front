@@ -25,9 +25,9 @@ const PedidoDetalhe = ({ params }) => {
         },
       });
 
+console.log(response)
 
-      const data = await response.json();
-      console.log(data.order)
+      const data = await response.json()
       if (response.status === 200) {
         setPedido(data);
       }
@@ -37,7 +37,7 @@ const PedidoDetalhe = ({ params }) => {
     setLoading(false);
   }
 
-  console.log(pedido)
+
 
   // UseEffect para inicializar o pedido e configurar o socket
   useEffect(() => {
