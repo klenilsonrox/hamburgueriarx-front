@@ -33,6 +33,8 @@ const MeusPedidos= () => {
     getPedidos()
   }, [])
 
+  console.log(pedidos)
+
   const getPedidos = async () => {
     const token = await getToken()
     setLoading(true)
@@ -120,7 +122,10 @@ const MeusPedidos= () => {
                     <div className='flex flex-col lg:flex-row'>
                     <span className="lg:text-lg font-semibold text-sm">Pedido ID:</span>
                     <span className="ml-2 font-medium text-sm">{pedido._id}</span>
+                    <p className='text-sm'>Tipo serviço: {pedido.tipoServico}</p>
+                    <p className='text-sm'>metodo de pagamento: {pedido.metodoPagamento}</p>
                     </div>
+                   
                     <Button
                       variant="ghost"
                       size="icon"

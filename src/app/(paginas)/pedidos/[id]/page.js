@@ -25,9 +25,9 @@ const PedidoDetalhe = ({ params }) => {
         },
       });
 
-      console.log(response)
 
       const data = await response.json();
+      console.log(data)
       if (response.status === 200) {
         setPedido(data.order);
       }
@@ -102,17 +102,19 @@ const PedidoDetalhe = ({ params }) => {
         
         <div className="mb-6">
           <h3 className="text-lg font-semibold">Informações do Cliente</h3>
-          <p className="text-gray-700"><strong>Nome:</strong> {pedido.user?.name}</p>
-          <p className="text-gray-700"><strong>WhatsApp:</strong> {pedido.user?.whatsapp}</p>
-          <p className="text-gray-700"><strong>Endereço:</strong> {pedido.user?.rua}, {pedido.user?.numero}, {pedido.user?.bairro}</p>
-          {pedido.complemento && <p className="text-gray-700"><strong>Complemento:</strong> {pedido.user?.complemento}</p>}
-          {pedido.referencia && <p className="text-gray-700"><strong>Referência:</strong> {pedido.user?.referencia}</p>}
+          <p className="text-gray-700"><strong>Nome:</strong> {pedido.name}</p>
+          <p className="text-gray-700"><strong>WhatsApp:</strong> {pedido.whatsapp}</p>
+          <p className="text-gray-700"><strong>Endereço:</strong> {pedido.rua}, {pedido.numero}, {pedido.bairro}</p>
+          {pedido.complemento && <p className="text-gray-700"><strong>Complemento:</strong> {pedido.complemento}</p>}
+          {pedido.referencia && <p className="text-gray-700"><strong>Referência:</strong> {pedido.referencia}</p>}
         </div>
 
         {/* Status do Pedido */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold">Status do Pedido</h3>
-          <p className={`font-medium ${pedido.status === 'PENDENTE' ? 'text-orange-500' : 'text-green-500'}`}>{pedido.status}</p>
+          <h3 className="text-lg font-semibold">Status do Pedido: <span className={`font-medium ${pedido.status === 'PENDENTE' ? 'text-orange-500' : 'text-green-500'}`}>{pedido.status}</span></h3>
+          
+          <p><strong>Tipo de serviço</strong> :{pedido.tipoServico}</p>
+          <p><strong>Método de pagamento</strong> :{pedido.metodoPagamento}</p>
         </div>
 
         {/* Lista de Produtos */}

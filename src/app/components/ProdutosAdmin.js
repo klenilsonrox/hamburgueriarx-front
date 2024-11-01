@@ -259,7 +259,7 @@ const router = useRouter()
       <Toaster richColors />
       
       {!loading && <div className="flex justify-between flex-col lg:flex-row lg:items-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-800">Gerenciamento de Produtos</h1>
+        <h1 className=" text:2xl lg:text-4xl font-bold text-gray-800 text-center lg:text-left">Gerenciamento de Produtos</h1>
         <Button className="bg-red-600 hover:bg-red-700 mt-3 lg:mt-0" onClick={addProd}>Adicionar Novo Produto</Button>
       </div>}
 

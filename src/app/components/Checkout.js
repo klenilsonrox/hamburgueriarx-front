@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { ArrowLeft, ShoppingBag, X } from 'lucide-react'
+import { ArrowLeft, ShoppingBag, X, Wallet, CreditCard, QrCode } from 'lucide-react'
 import { useCart } from '../contexts/CartContext'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,6 +19,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { getToken } from '../actions/getToken'
+import { baseURl } from '../../../baseUrl'
 
 export default function Checkout() {
   const { cart } = useCart()
@@ -26,7 +36,10 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [orderId, setOrderId] = useState(null)
+  const [metodoPagamento, setPaymentMethod] = useState('')
+  const [changeAmount, setChangeAmount] = useState('')
   const router = useRouter()
+  const tipoServico = "Entrega"
 
   useEffect(() => {
     setProducts(cart)
@@ -39,18 +52,41 @@ export default function Checkout() {
   const deliveryFee = 3
   const finalTotal = totalPrice + deliveryFee
 
+  const validateOrder = () => {
+    if (!metodoPagamento) {
+      toast.error("Por favor, selecione um método de pagamento")
+      return false
+    }
+    if (metodoPagamento === 'dinheiro' && !changeAmount) {
+      toast.error("Por favor, informe o valor para troco ou digite 0 se não precisar de troco")
+      return false
+    }
+    return true
+  }
+
   async function fecharPedido() {
+    if (!validateOrder()) return
+
     try {
       setLoading(true)
-      const response = await fetch('/api/orders', {
+  
+      const token = await getToken()
+      const response = await fetch(`${baseURl}/orders`	, {
+      
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(products),
+        body: JSON.stringify({products,tipoServico, metodoPagamento}),
       })
 
+      console.log(products)
+      console.log(tipoServico)
+      console.log(metodoPagamento)
+
       const data = await response.json()
+      console.log("dados",data)
 
       if (response.status === 201) {
         setOrderId(data._id)
@@ -69,8 +105,9 @@ export default function Checkout() {
 
   function sendWhatsApp() {
     const numero = "+5531992311170"
+    const paymentDetails = `Forma de pagamento: ${metodoPagamento}${metodoPagamento === 'dinheiro' ? ` (Troco para R$ ${changeAmount})` : ''}`
     const link = `https://hamburgueriarx.vercel.app/pedidos/${orderId}`
-    const mensagem = `Olá, boa noite, acabei de fazer esse pedido: ${link}`
+    const mensagem = `Olá, boa noite, acabei de fazer esse pedido: ${link}\n${paymentDetails}`
     const whatsappUrl = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`
     window.open(whatsappUrl, '_blank')
     router.push(`/pedidos/${orderId}`)
@@ -111,6 +148,54 @@ export default function Checkout() {
                 </div>
               </motion.div>
             ))}
+
+            <div className="mt-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Método de Pagamento
+                </label>
+                <Select onValueChange={setPaymentMethod} value={metodoPagamento}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione o método de pagamento" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pix">
+                      <div className="flex items-center">
+                        <QrCode className="mr-2 h-4 w-4" />
+                        PIX
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="dinheiro">
+                      <div className="flex items-center">
+                        <Wallet className="mr-2 h-4 w-4" />
+                        Dinheiro
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="cartao">
+                      <div className="flex items-center">
+                        <CreditCard className="mr-2 h-4 w-4" />
+                        Cartão
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {metodoPagamento === 'dinheiro' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Troco para quanto?
+                  </label>
+                  <Input
+                    type="number"
+                    value={changeAmount}
+                    onChange={(e) => setChangeAmount(e.target.value)}
+                    placeholder="Digite o valor para troco"
+                    className="w-full"
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col sm:flex-row justify-between items-center bg-gray-100 p-4 rounded-b-lg">
@@ -148,6 +233,10 @@ export default function Checkout() {
                   ))}
                 </ul>
                 <p className="mt-4 font-semibold">Total: R$ {Number(finalTotal).toFixed(2)}</p>
+                <p className="mt-2">
+                  Forma de pagamento: {metodoPagamento}
+                  {metodoPagamento === 'dinheiro' && ` (Troco para R$ ${changeAmount})`}
+                </p>
               </div>
               <DialogFooter>
                 <Button onClick={sendWhatsApp} className="w-full bg-green-500 hover:bg-green-600 text-white">

@@ -3,7 +3,7 @@ import { jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
 // Defina as rotas protegidas
-const protectedRoutes = ['/conta'];
+const protectedRoutes = ['/conta', '/pedidos', '/dados-cadastrais', '/admin'];
 const loginRoute = '/auth/entrar';
 
 export async function middleware(req) {
@@ -23,6 +23,7 @@ export async function middleware(req) {
     }
   }
 
+  console.log(token)
 
   // Verifique se o token existe e o usuário está tentando acessar uma página protegida
   if (protectedRoutes.some(route => nextUrl.pathname.startsWith(route))) {
@@ -62,5 +63,5 @@ export async function middleware(req) {
 
 // Defina em quais caminhos o middleware será aplicado
 export const config = {
-  matcher: ['/conta/:path*', '/auth/entrar', '/auth/esqueci-senha', '/auth/cadastrar', '/auth/:path*', '/admin/:path*'],
+  matcher: ['/conta/:path*', '/pedidos/:path*', '/dados-cadastrais/:path*', '/admin/:path*', '/auth/entrar', '/auth/esqueci-senha', '/auth/cadastrar', '/auth/:path*'],
 };

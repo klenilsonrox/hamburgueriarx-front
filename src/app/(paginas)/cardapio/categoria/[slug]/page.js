@@ -263,7 +263,7 @@ const page = ({ params }) => {
                                     </label>
                                     <Textarea 
                                         id="product-observation"
-                                        placeholder={`${selectedProduct.categoryId==="b49f8ff7-7e5a-4842-bd71-0cc20c3ac9d8" ? "ex: Cola cola zero":"ex: x tudo sem milho"} `}
+                                        placeholder={`${selectedProduct.categoryId==="b49f8ff7-7e5a-4842-bd71-0cc20c3ac9d8" ? "ex: Cola cola zero":"ex: x tudo sem milho"}${selectedProduct.categoryId==="60f7b82e-00f1-4972-8202-51b33d7cd09e" ? "":""} `}
                                         value={observacao}
                                         onChange={(e) => setObservacao(e.target.value)}
                                         className="w-full border-red-300 focus:border-red-500 focus:ring-red-500"
