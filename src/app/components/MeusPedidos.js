@@ -61,12 +61,12 @@ const MeusPedidos= () => {
       }
 
       const data = await response.json()
- 
+ console.log(data)
       setPedidos(data.minhasOrders.reverse())
     } catch (error) {
       console.error(error)
       // Apenas exibe o toast em caso de erro
-      toast.error("Erro ao carregar os pedidos. Tente novamente mais tarde.")
+      console.log(error)
     }
     setLoading(false)
   }
