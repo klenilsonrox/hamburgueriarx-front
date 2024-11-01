@@ -175,11 +175,13 @@ const router = useRouter()
       });
 
 
+      console.log(response)
+      console.log(response.status)
 
-      if (response.ok) {
+      if (response.status===200) {
         toast.success('Produto deletado com sucesso!');
         fetchProducts();
-        setDeleteDialogOpen(false);
+        return
       } else {
         toast.error('Erro ao deletar produto');
       }

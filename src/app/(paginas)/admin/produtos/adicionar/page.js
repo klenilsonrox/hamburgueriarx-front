@@ -68,6 +68,12 @@ const AddProduct = () => {
       formData.append('imageUrl', image)
     }
 
+    if(!title || !description || !price || !categoryId) {
+      toast.error('Preencha todos os campos')
+      setLoading(false)
+      return
+    }
+
     try {
       const token = await getToken()
       setLoading(true)
@@ -79,8 +85,9 @@ const AddProduct = () => {
         body: formData,
       })
 
+    
+
       const data = await response.json()
-      console.log(response.status)
       if (response.status===201) {
         toast.success('Produto adicionado com sucesso!')
         // Reset form
