@@ -103,7 +103,7 @@ export default function HomePage() {
             <h2 className="text-3xl font-bold text-gray-800 mb-8">Entre em Contato</h2>
             <div className="flex flex-wrap justify-center gap-6">
               <Button size="lg" className="bg-red-600 hover:bg-red-700">
-                <Phone className="mr-2 h-4 w-4" /> (11) 9999-9999
+                <Phone className="mr-2 h-4 w-4" /> (31) 99231-1170
               </Button>
               <Button size="lg" variant="outline">
                 <MapPin className="mr-2 h-4 w-4" /> Localização
