@@ -50,13 +50,12 @@ export async function middleware(req) {
 // Configurar o matcher
 export const config = {
   matcher: [
-    '/conta/:path*', 
-    '/pedidos/:path*', 
-    '/dados-cadastrais/:path*', 
-    '/admin/:path*', 
+    '/conta', 
+    '/pedidos', 
+    '/dados-cadastrais', 
+    '/admin', 
     '/auth/entrar', 
     '/auth/esqueci-senha', 
-    '/auth/cadastrar', 
-    '/auth/:path*'
+    '/auth/cadastrar'
   ],
 };
