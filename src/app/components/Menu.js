@@ -1,121 +1,149 @@
 'use client'
-import Link from 'next/link';
-import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
-import React, { useState } from 'react';
-import { FaRegUser } from "react-icons/fa";
-import { useUserContext } from '../contexts/UserContext';
-import { logout } from '../actions/logout';
+
+import React, { useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
+import { User, ShoppingBag, Menu, X } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useUserContext } from '../contexts/UserContext'
+import { logout } from '../actions/logout'
 
 const itemsMenu = [
-    { id: 1, name: "Início", link: "/" },
-    { id: 2, name: "Cardápio", link: "/cardapio" },
-];
+  { id: 1, name: "Início", link: "/" },
+  { id: 2, name: "Cardápio", link: "/cardapio" },
+]
 
-const Menu = () => {
-    const [menuConfig, setMenuConfig] = useState(false);
-    const { user } = useUserContext();
+export default function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { user } = useUserContext()
 
-    function closeMenuConfig() {
-        setMenuConfig(false);
-    }
+  const handleLogout = async () => {
+    await logout()
+    window.location.reload()
+  }
 
-    const handleLogout = async () => {
-        await logout();
-        window.location.reload();
-    };
+  return (
+    <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
+      <div className="container max-w-7xl mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-2">
+            <Image src="/logo.png" alt="Hamburgueria RX Logo" width={120} height={80} />
+           
+          </Link>
 
-    return (
-        <div className='border-b py-3 bg-white shadow-md'>
-            <header className="p-4 max-w-7xl mx-auto w-full flex items-center justify-between">
-                <Link href="/" className="text-xl font-bold text-red-600">Hamburgueria <span className='text-red-500'>RX</span></Link>
+          <nav className="hidden md:flex items-center space-x-6">
+            {itemsMenu.map((item) => (
+              <Link key={item.id} href={item.link} className="text-gray-700 hover:text-red-600 transition duration-300">
+                {item.name}
+              </Link>
+            ))}
+          </nav>
 
-                <div className='hidden lg:flex items-center gap-6'>
-                    <ul className='flex space-x-6'>
-                        {itemsMenu.map((item) => (
-                            <li key={item.id}>
-                                <Link href={item.link} className='text-gray-700 hover:text-red-600 transition duration-300'>{item.name}</Link>
-                            </li>
-                        ))}
-                        {!user && (
-                            <>
-                                <li>
-                                    <Link href="/auth/entrar" className='text-gray-700 hover:text-red-600 transition duration-300'>Entrar</Link>
-                                </li>
-                                <li>
-                                    <Link href="/auth/cadastrar" className='text-gray-700 hover:text-red-600 transition duration-300'>Cadastrar</Link>
-                                </li>
-                            </>
-                        )}
-                        {user && (
-                            <li className='cursor-pointer' onClick={handleLogout}>
-                                <span className='text-gray-700 hover:text-red-600 transition duration-300'>Sair</span>
-                            </li>
-                        )}
-                    </ul>
+          <div className="flex items-center space-x-4">
+            <Link href="/carrinho" className="text-gray-700 hover:text-red-600 transition duration-300">
+              <ShoppingBag className="h-6 w-6" />
+            </Link>
 
-                    {user && (
-                        <div className='relative'>
-                            <button onClick={() => setMenuConfig(!menuConfig)} className='text-red-600 text-2xl hover:text-red-800 transition duration-300'>
-                                <FaRegUser />
-                            </button>
-                            {menuConfig && (
-                                <div className='absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md border border-gray-200 z-10 animaLeft'>
-                                    <button className='absolute top-2 right-2' onClick={closeMenuConfig}>
-                                        <AiOutlineClose className='text-gray-600 hover:text-red-600' />
-                                    </button>
-                                    <p className='px-4 py-2 text-lg font-medium text-gray-800'>Olá, {user.name}</p>
-                                    <ul className='py-2'>
-                                        <li><Link href="/pedidos" className='block px-4 py-2 hover:text-red-500 transition duration-300'>Pedidos</Link></li>
-                                        <li><Link href="/dados-cadastrais" className='block px-4 py-2 hover:text-red-500 transition duration-300'>Meus dados</Link></li>
-                                        <li className='block px-4 py-2 text-lg cursor-pointer hover:text-red-500 transition duration-300' onClick={handleLogout}>Sair</li>
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
-
-                {/* Menu Mobile */}
-                <div className='lg:hidden flex items-center'>
-                    <button className='text-red-600 text-2xl' onClick={() => setMenuConfig(!menuConfig)}>
-                        {menuConfig ? <AiOutlineClose /> : <AiOutlineMenu />}
-                    </button>
-                </div>
-            </header>
-
-            {/* Menu Mobile (quando menuConfig é true) */}
-            {menuConfig && (
-                <div className='lg:hidden bg-white border-t border-gray-200'>
-                    <ul className='flex flex-col p-4 space-y-2'>
-                        {itemsMenu.map((item) => (
-                            <li key={item.id}>
-                                <Link href={item.link} className='block text-gray-700 hover:text-red-600 transition duration-300'>{item.name}</Link>
-                            </li>
-                        ))}
-                        {!user && (
-                            <>
-                                <li>
-                                    <Link href="/auth/entrar" className='block text-gray-700 hover:text-red-600 transition duration-300'>Entrar</Link>
-                                </li>
-                                <li>
-                                    <Link href="/auth/cadastrar" className='block text-gray-700 hover:text-red-600 transition duration-300'>Cadastrar</Link>
-                                </li>
-                            </>
-                        )}
-                        {user && (
-                            <>
-                             <li><Link href="/pedidos" className='block  hover:text-red-500 transition duration-300'>Pedidos</Link></li>
-                             <li><Link href="/dados-cadastrais" className='block hover:text-red-500 transition duration-300'>Meus dados</Link></li>
-                            <li className='cursor-pointer' onClick={handleLogout}>
-                                <span className='block text-gray-700 hover:text-red-600 transition duration-300'>Sair</span>
-                            </li>
-                            </>
-                        )}
-                    </ul>
-                </div>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <User className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">Olá, {user.name}</p>
+                      <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/pedidos">Pedidos</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/dados-cadastrais">Meus dados</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="hidden md:flex items-center space-x-4">
+                <Link href="/auth/entrar" className="text-gray-700 hover:text-red-600 transition duration-300">
+                  Entrar
+                </Link>
+                <Button asChild className="bg-red-600 hover:bg-red-700 text-white">
+                  <Link href="/auth/cadastrar">Cadastrar</Link>
+                </Button>
+              </div>
             )}
-        </div>
-    );
-};
 
-export default Menu;
+            <Button
+              variant="ghost"
+              className="md:hidden"
+              size="icon"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="md:hidden"
+          >
+            <nav className="flex flex-col space-y-4 px-4 py-6 bg-white border-t">
+              {itemsMenu.map((item) => (
+                <Link key={item.id} href={item.link} className="text-gray-700 hover:text-red-600 transition duration-300">
+                  {item.name}
+                </Link>
+              ))}
+              {!user && (
+                <>
+                  <Link href="/auth/entrar" className="text-gray-700 hover:text-red-600 transition duration-300">
+                    Entrar
+                  </Link>
+                  <Link href="/auth/cadastrar" className="text-gray-700 hover:text-red-600 transition duration-300">
+                    Cadastrar
+                  </Link>
+                </>
+              )}
+              {user && (
+                <>
+                  <Link href="/pedidos" className="text-gray-700 hover:text-red-600 transition duration-300">
+                    Pedidos
+                  </Link>
+                  <Link href="/dados-cadastrais" className="text-gray-700 hover:text-red-600 transition duration-300">
+                    Meus dados
+                  </Link>
+                  <button onClick={handleLogout} className="text-left text-gray-700 hover:text-red-600 transition duration-300">
+                    Sair
+                  </button>
+                </>
+              )}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  )
+}

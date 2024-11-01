@@ -1,35 +1,58 @@
 'use client'
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 
-const Categorias = () => {
-    const [categorias, setCategorias] = useState([]);
+import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Utensils } from 'lucide-react'
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
-    useEffect(() => {
-        fetch('/api/categorias')
-            .then(response => response.json())
-            .then(data => setCategorias(data.categories)); // Acessando a propriedade "categories"
-    }, []);
 
-    return (
-        <div className="py-4">
-            <div className="flex lg:grid lg:grid-cols-10 gap-4 overflow-x-scroll lg:overflow-x-hidden">
-                {categorias && categorias.map((categoria) => (
-                    <Link key={categoria.id} href={`/cardapio/categoria/${categoria.slug}`} passHref>
-                        <div className="relative rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col items-center w-[120px] group">
-                            <img 
-                                src={categoria.imageUrl} 
-                                alt={categoria.name} 
-                                className="h-[90px] w-[90px] object-cover rounded-md transform transition-transform duration-300 group-hover:scale-110"
-                            />
-                            <h2 className="text-sm font-semibold mt-2 text-center text-gray-800 transition-colors duration-300 group-hover:text-red-600">{categoria.name}</h2>
-                            <div className="absolute inset-0 bg-red-500 opacity-0 transition-opacity duration-300 group-hover:opacity-10 rounded-lg"></div>
-                        </div>
-                    </Link>
-                ))}
-            </div>
+
+export default function Categorias() {
+  const [categorias, setCategorias] = useState([])
+
+  useEffect(() => {
+    fetch('/api/categorias')
+      .then(response => response.json())
+      .then(data => setCategorias(data.categories))
+  }, [])
+
+  return (
+    <div className="w-full max-w-7xl mx-auto px-4 py-6">
+      <div className="bg-red-600 text-white rounded-lg shadow-md p-6 mb-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Nosso Cardápio</h1>
+            <p className="text-sm text-red-100">Escolha seus favoritos</p>
+          </div>
+          <Utensils className="w-8 h-8" />
         </div>
-    );
-};
+      </div>
 
-export default Categorias;
+      <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+        <div className="flex w-max space-x-4 p-4">
+          {categorias.map((categoria) => (
+            <Link
+              key={categoria.id}
+              href={`/cardapio/categoria/${categoria.slug}`}
+              className="flex flex-col items-center space-y-2 hover:opacity-80 transition-opacity"
+            >
+              <div className="relative w-20 h-20 overflow-hidden rounded-full border-2 border-red-200">
+                <Image
+                  src={categoria.imageUrl}
+                  alt={categoria.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <span className="text-sm font-medium text-gray-700">{categoria.name}</span>
+            </Link>
+          ))}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+
+      
+    </div>
+  )
+}

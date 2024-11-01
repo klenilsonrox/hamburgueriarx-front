@@ -25,7 +25,6 @@ const ProdutosIFoodStyle = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [productQuantity, setProductQuantity] = useState(1);
-    const [productObservation, setProductObservation] = useState('');
     const limit = 10;
 
     useEffect(() => {
@@ -58,21 +57,19 @@ const ProdutosIFoodStyle = () => {
             quantity: productQuantity
         };
 
-        console.log(cartItem)
-
         addToCart(cartItem,productQuantity);
         
         // Reset modal state
         setSelectedProduct(null);
         setProductQuantity(1);
-        setProductObservation('');
+  
     };
 
     const handleViewProduct = (product) => {
         setSelectedProduct(product);
         // Reset quantity and observation when opening modal
         setProductQuantity(1);
-        setProductObservation('');
+  
     };
 
     const handleQuantityChange = (change) => {
@@ -84,13 +81,7 @@ const ProdutosIFoodStyle = () => {
 
     return (
         <div className="bg-gray-50 min-h-screen">
-            <div className="bg-red-600 text-white py-4 px-4 flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold">Nosso Cardápio</h1>
-                    <p className="text-sm text-red-100">Escolha seus favoritos</p>
-                </div>
-                <MdRestaurant size={30} />
-            </div>
+            
 
             <div className="container py-6">
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
