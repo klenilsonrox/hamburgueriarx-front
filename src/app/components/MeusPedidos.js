@@ -119,14 +119,8 @@ const MeusPedidos= () => {
               <CardHeader>
                 <CardTitle className="flex justify-between items-center">
                   <div className="flex items-center">
-                    <div className='flex flex-col lg:flex-row'>
-                    <span className="lg:text-lg font-semibold text-sm">Pedido ID:</span>
-                    <span className="ml-2 font-medium text-sm">{pedido._id}</span>
-                    <p className='text-sm'>Tipo serviço: {pedido.tipoServico}</p>
-                    <p className='text-sm'>metodo de pagamento: {pedido.metodoPagamento}</p>
-                    </div>
-                   
-                    <Button
+                    <div className='flex flex-col '>
+                    <span className="lg:text-lg text-sm flex items-center">Pedido ID: <span className="ml-2 text-sm">{pedido._id}</span> <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => copiarIdPedido(pedido._id)}
@@ -134,7 +128,13 @@ const MeusPedidos= () => {
                       aria-label="Copiar ID do pedido"
                     >
                       <MdContentCopy className="h-4 w-4" />
-                    </Button>
+                    </Button></span>
+      
+                    <p className='text-sm'>Tipo serviço: {pedido.tipoServico}</p>
+                    <p className='text-sm'>metodo de pagamento: {pedido.metodoPagamento}</p>
+                    </div>
+                   
+  
                   </div>
                   <Badge className={`${statusColors[pedido.status]} absolute right-2 top-2 text-sm`}>{pedido.status}</Badge>
                 </CardTitle>

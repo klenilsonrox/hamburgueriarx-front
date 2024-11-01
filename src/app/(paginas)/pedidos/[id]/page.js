@@ -44,7 +44,7 @@ const PedidoDetalhe = ({ params }) => {
 
   }, []); // Apenas 'params.id' como dependência para inicialização
 
-  console.log(pedido)
+
 
   if (loading) {
     return  <>
@@ -102,11 +102,11 @@ const PedidoDetalhe = ({ params }) => {
         
         <div className="mb-6">
           <h3 className="text-lg font-semibold">Informações do Cliente</h3>
-          <p className="text-gray-700"><strong>Nome:</strong> {pedido.name}</p>
-          <p className="text-gray-700"><strong>WhatsApp:</strong> {pedido.whatsapp}</p>
-          <p className="text-gray-700"><strong>Endereço:</strong> {pedido.rua}, {pedido.numero}, {pedido.bairro}</p>
-          {pedido.complemento && <p className="text-gray-700"><strong>Complemento:</strong> {pedido.complemento}</p>}
-          {pedido.referencia && <p className="text-gray-700"><strong>Referência:</strong> {pedido.referencia}</p>}
+          <p className="text-gray-700"><strong>Nome:</strong> {pedido.user?.name}</p>
+          <p className="text-gray-700"><strong>WhatsApp:</strong> {pedido.user?.whatsapp}</p>
+          <p className="text-gray-700"><strong>Endereço:</strong> {pedido.user?.rua}, {pedido.user?.numero}, {pedido.user?.bairro}</p>
+          {pedido.user?.complemento && <p className="text-gray-700"><strong>Complemento:</strong> {pedido.user?.complemento}</p>}
+          {pedido.user?.referencia && <p className="text-gray-700"><strong>Referência:</strong> {pedido.user?.referencia}</p>}
         </div>
 
         {/* Status do Pedido */}
