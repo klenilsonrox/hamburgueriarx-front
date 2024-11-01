@@ -82,7 +82,7 @@ const ProdutosIFoodStyle = () => {
         <div className="bg-gray-50 min-h-screen">
             
 
-            <div className="container py-6">
+            <div className="container ">
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {loading
                         ? Array.from({ length: 10 }).map((_, index) => (

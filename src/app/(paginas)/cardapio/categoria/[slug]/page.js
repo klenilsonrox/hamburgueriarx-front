@@ -62,13 +62,14 @@ const page = ({ params }) => {
         setProductQuantity(1);
  
     };
-    const getCategoria = async (page) => {
+    const getCategoria = async () => {
+      
         try {
             setIsLoading(true);
-            const response = await fetch(`${baseURl}/categories/slug/${slug}?page=${page}&limit=${limit}`);
-            const { category, totalPages } = await response.json();
-            setCategoria(category);
-            setTotalPages(totalPages); // Atualizando o número total de páginas
+            const response = await fetch(`${baseURl}/categories/slug/${slug}`);
+            const data = await response.json();
+    
+            setCategoria(data.category);
         } catch (error) {
             console.error("Erro ao carregar a categoria:", error);
         } finally {
@@ -77,9 +78,9 @@ const page = ({ params }) => {
     };
 
     useEffect(() => {
-        getCategoria(page);
+        getCategoria();
         getAleatorio();
-    }, [page]); // Atualiza sempre que a página mudar
+    }, []); // Atualiza sempre que a página mudar
 
     if (!categoria) {
         return <div className='w-full max-w-7xl mx-auto p-4'>
@@ -94,6 +95,8 @@ const page = ({ params }) => {
         setAleatorio(alea);
         return alea;
     }
+
+  
 
     return (
         <div className={`w-full max-w-7xl mx-auto p-4 ${classe[aleatorio]}`}>
@@ -123,7 +126,7 @@ const page = ({ params }) => {
                                     {produto.imageUrl ? (
                                         <Image
                                             src={produto.imageUrl}
-                                            alt={produto.name}
+                                            alt={produto.title}
                                             layout="fill"
                                             objectFit="cover"
                                             className="hover:scale-105 transition-transform duration-300"
@@ -188,7 +191,7 @@ const page = ({ params }) => {
                         <>
                             <div className="relative h-64 w-full mb-4">
                                 {selectedProduct.imageUrl ? (
-                                    <img
+                                    <Image
                                         src={selectedProduct.imageUrl}
                                         alt={selectedProduct.title}
                                         layout="fill"
@@ -260,7 +263,7 @@ const page = ({ params }) => {
                                     </label>
                                     <Textarea 
                                         id="product-observation"
-                                        placeholder="Ex: Sem cebola, extra molho..."
+                                        placeholder={`${selectedProduct.categoryId==="b49f8ff7-7e5a-4842-bd71-0cc20c3ac9d8" ? "ex: Cola cola zero":"ex: x tudo sem milho"} `}
                                         value={observacao}
                                         onChange={(e) => setObservacao(e.target.value)}
                                         className="w-full border-red-300 focus:border-red-500 focus:ring-red-500"
