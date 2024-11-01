@@ -1,29 +1,37 @@
+'use client'
 import Image from 'next/image'
-import { notFound } from 'next/navigation'
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { getToken } from '@/app/actions/getToken'
 import Link from 'next/link'
 import { baseURl } from '../../../../../../baseUrl'
+import { useEffect, useState } from 'react'
+import { loadGetInitialProps } from 'next/dist/shared/lib/utils'
 
-async function getOrder(id) {
+
+
+export default  function OrderPage({ params }) {
+  const [order, setOrder] = useState([])
+
+  async function getOrder() {
     const token = await getToken()
-  const res = await fetch(`${baseURl}/orders/${id}`, { 
+  const res = await fetch(`${baseURl}/orders/${params.id}`, { 
     headers: {
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
     }
   })
-  
-  if (!res.ok) {
-    notFound()
-  }
-  return res.json()
+
+  const data = await res.json()
+console.log(data)
+setOrder(data)
+
 }
 
-export default async function OrderPage({ params }) {
-  const { order } = await getOrder(params.id)
-
- 
+useEffect(()=>{ 
+  getOrder()
+},[])
 
   const statusColors = {
     PENDENTE: 'bg-yellow-500',
@@ -43,14 +51,20 @@ export default async function OrderPage({ params }) {
     })
   }
 
-  const totalPrice = order.products.reduce((sum, product) => sum + product.price * product.quantity, 0)
+  if (!order) {
+    return <p>Carregando...</p>
+  }
+
+  console.log(order)
+
+  // const totalPrice = order.products.reduce((sum, product) => sum + product.price * product.quantity, 0)
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
       <Card>
         <CardHeader>
           <CardTitle className="flex justify-between items-center">
-            <span>Pedido #{order._id.slice(-6)}</span>
+            <span>Pedido #{order._id}</span>
             <Badge className={`${statusColors[order.status]} text-white`}>
               {order.status}
             </Badge>
@@ -60,17 +74,17 @@ export default async function OrderPage({ params }) {
           <div className="grid gap-6">
             <div>
               <h2 className="text-xl font-semibold mb-2">Detalhes do Cliente</h2>
-              <p><strong>Nome:</strong> {order.user.name}</p>
-              <p><strong>WhatsApp:</strong> {order.user.whatsapp}</p>
-              <p><strong>Endereço:</strong> {order.user.rua}, {order.user.numero}</p>
-              <p><strong>Bairro:</strong> {order.user.bairro}</p>
-              {order.user.complemento && <p><strong>Complemento:</strong> {order.user.complemento}</p>}
-              {order.user.referencia && <p><strong>Referência:</strong> {order.user.referencia}</p>}
+              <p><strong>Nome:</strong> {order.user?.name}</p>
+              <p><strong>WhatsApp:</strong> {order.user?.whatsapp}</p>
+              <p><strong>Endereço:</strong> {order.user?.rua}, {order.user?.numero}</p>
+              <p><strong>Bairro:</strong> {order.user?.bairro}</p>
+              {order.user?.complemento && <p><strong>Complemento:</strong> {order.user?.complemento}</p>}
+              {order.user?.referencia && <p><strong>Referência:</strong> {order.user?.referencia}</p>}
             </div>
             <div>
               <h2 className="text-xl font-semibold mb-2">Itens do Pedido</h2>
               <ul className="space-y-4">
-                {order.products.map((product) => (
+                {order.products && order.products.map((product) => (
                   <li key={product._id} className="flex items-center space-x-4">
                     <Image
                       src={product.imageUrl}
@@ -91,7 +105,7 @@ export default async function OrderPage({ params }) {
             </div>
             <div>
               <h2 className="text-xl font-semibold">Total do Pedido</h2>
-              <p className="text-2xl font-bold">R$ {totalPrice.toFixed(2)}</p>
+              {/* <p className="text-2xl font-bold">R$ {totalPrice.toFixed(2)}</p> */}
             </div>
             <div className="text-sm text-gray-600">
               <p>Criado em: {formatDate(order.createdAt)}</p>
