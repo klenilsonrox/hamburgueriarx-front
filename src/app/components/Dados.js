@@ -7,6 +7,9 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { CartProvider } from '../contexts/CartContext';
 import Input from './Input';
+import Header from './Header';
+import SkeletonDados from './SkeletonDados';
+import { baseURl } from '../../../baseUrl';
 
 const Dados = () => {
     const [user, setUser] = useState("");
@@ -96,28 +99,28 @@ const Dados = () => {
             return;
         }
 
-        setLoading(true);
         try {
-            const response = await fetch("/api/update-user", {
+            setLoading(true);
+            const token =await getToken()
+            const response = await fetch(`${baseURl}/users`, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({ name, whatsapp, cep, rua, numero, bairro, cidade, complemento, referencia }),
             });
+
+            if(response.status===200){
+                toast.success("Dados atualizados com sucesso!")
+            }
 
             const data = await response.json();
 
             if (data.error) {
                 toast.error(data.error || "Erro ao atualizar os dados");
             }
-            if (response.status === 200) {
-                toast.success("Dados atualizados com sucesso!");
-                setTimeout(() => {
-                    window.location.reload();
-                }, 500);
-                return;
-            }
+           
         } catch (error) {
             console.log(error);
         } finally {
@@ -127,8 +130,7 @@ const Dados = () => {
 
     return (
         <>
-        {loading ? <p>Carregando...</p> : (
-            <CartProvider>
+        <CartProvider>
             <div className='rounded-lg p-6 flex flex-col items-center'>
               <ToastContainer />
               <h1 className='text-2xl font-bold text-center mb-6'>Atualizar Dados</h1>
@@ -159,8 +161,7 @@ const Dados = () => {
                   </div>
               </form>
           </div>
-          </CartProvider>
-        )}
+          </CartProvider> 
         </>
     );
 };

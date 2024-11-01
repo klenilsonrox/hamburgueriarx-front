@@ -118,19 +118,20 @@ const MeusPedidos= () => {
                 <CardTitle className="flex justify-between items-center">
                   <div className="flex items-center">
                     <div className='flex flex-col lg:flex-row'>
-                    <span className="text-lg font-semibold text-foreground">Pedido ID:</span>
-                    <span className="ml-2 font-medium text-primary">{pedido._id}</span>
+                    <span className="lg:text-lg font-semibold text-sm">Pedido ID:</span>
+                    <span className="ml-2 font-medium text-sm">{pedido._id}</span>
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => copiarIdPedido(pedido._id)}
+                      className="flex items-center"
                       aria-label="Copiar ID do pedido"
                     >
                       <MdContentCopy className="h-4 w-4" />
                     </Button>
                   </div>
-                  <Badge className={`${statusColors[pedido.status]} absolute right-2 top-2`}>{pedido.status}</Badge>
+                  <Badge className={`${statusColors[pedido.status]} absolute right-2 top-2 text-sm`}>{pedido.status}</Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent>

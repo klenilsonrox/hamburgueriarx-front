@@ -8,15 +8,16 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
+import { 
+  Select, 
+  SelectContent, 
+  SelectGroup, 
+  SelectItem, 
+  SelectLabel, 
+  SelectTrigger, 
+  SelectValue 
 } from "@/components/ui/select"
+import { FileImage, FolderPlus } from 'lucide-react'
 import { getToken } from '@/app/actions/getToken'
 import { baseURl } from '../../../../../../baseUrl'
 
@@ -103,77 +104,101 @@ const AddProduct = () => {
   }
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
+    <div className=" bg-gray-50 flex items-center justify-center p-4 ">
       <ToastContainer />
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">Adicionar Novo Produto</CardTitle>
+      <Card className="w-full max-w-xl shadow-lg border-none">
+        <CardHeader className="bg-[#EA1D2C] text-white rounded-t-lg">
+          <CardTitle className="text-2xl font-bold flex items-center">
+            <FolderPlus className="mr-3 w-6 h-6" />
+            Adicionar Novo Produto
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <CardContent className="p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="title">Título do Produto</Label>
+              <Label htmlFor="title" className="text-gray-700">Título do Produto</Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 placeholder="Digite o título do produto"
+                className="focus:ring-[#EA1D2C] focus:border-[#EA1D2C]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description">Descrição</Label>
+              <Label htmlFor="description" className="text-gray-700">Descrição</Label>
               <Textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
                 placeholder="Digite a descrição do produto"
+                className="focus:ring-[#EA1D2C] focus:border-[#EA1D2C] min-h-[120px]"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="price">Preço</Label>
-              <Input
-                id="price"
-                type="number"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                required
-                placeholder="Digite o preço do produto"
-                step="0.01"
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="price" className="text-gray-700">Preço</Label>
+                <Input
+                  id="price"
+                  type="number"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  required
+                  placeholder="R$ 0,00"
+                  step="0.01"
+                  className="focus:ring-[#EA1D2C] focus:border-[#EA1D2C]"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="category" className="text-gray-700">Categoria</Label>
+                <Select onValueChange={(value) => setCategoryId(value)} required>
+                  <SelectTrigger className="focus:ring-[#EA1D2C] focus:border-[#EA1D2C]">
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Categorias</SelectLabel>
+                      {categories && categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="category">Categoria</Label>
-              <Select onValueChange={(value) => setCategoryId(value)} required>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione uma categoria" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Categorias</SelectLabel>
-                    {categories && categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="image">Imagem do Produto</Label>
-              <Input
-                id="image"
-                type="file"
-                onChange={handleImageChange}
-                accept="image/*"
-              />
+              <Label htmlFor="image" className="text-gray-700">Imagem do Produto</Label>
+              <div className="flex items-center space-x-3">
+                <Input
+                  id="image"
+                  type="file"
+                  onChange={handleImageChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <label 
+                  htmlFor="image" 
+                  className="flex items-center px-4 py-2 bg-[#EA1D2C]/10 text-[#EA1D2C] rounded-md cursor-pointer hover:bg-[#EA1D2C]/20 transition-colors"
+                >
+                  <FileImage className="mr-2 w-5 h-5" />
+                  Selecionar Imagem
+                </label>
+                {image && <span className="text-sm text-gray-600">{image.name}</span>}
+              </div>
             </div>
           </form>
         </CardContent>
-        <CardFooter>
-          <Button type="submit" onClick={handleSubmit} disabled={loading} className="w-full bg-red-600 hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-300">
+        <CardFooter className="bg-gray-100 p-6 rounded-b-lg">
+          <Button 
+            type="submit" 
+            onClick={handleSubmit} 
+            disabled={loading} 
+            className="w-full bg-[#EA1D2C] hover:bg-[#C7162B] text-white disabled:bg-[#EA1D2C]/50 transition-colors"
+          >
             {loading ? 'Adicionando...' : 'Adicionar Produto'}
           </Button>
         </CardFooter>

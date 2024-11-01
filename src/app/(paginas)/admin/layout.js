@@ -1,7 +1,4 @@
 import HeaderAdmin from "@/app/components/HeaderAdmin";
-import { global } from "styled-jsx/css";
-
-
 
 
 

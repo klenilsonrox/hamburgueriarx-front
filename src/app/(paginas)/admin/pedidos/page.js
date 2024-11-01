@@ -68,11 +68,11 @@ export default function OrderManagement() {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto">
       <h1 className="text-2xl font-bold mb-4">Pedidos</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {orders.map((order) => (
-          <Card key={order._id} className="w-full relative">
+          <Card key={order._id} className="w-full relative p-0">
             <CardHeader>
               <CardTitle className="flex justify-between items-center">
                 <span>Order #{order._id.slice(-4)}</span>

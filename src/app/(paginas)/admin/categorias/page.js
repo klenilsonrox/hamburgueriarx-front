@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Trash2, Edit2, PlusCircle, ImagePlus } from 'lucide-react'
 import Image from 'next/image'
 import 'react-toastify/dist/ReactToastify.css'
 import { toast, ToastContainer } from 'react-toastify'
@@ -21,9 +22,12 @@ export default function CategoryList() {
   const [editingCategory, setEditingCategory] = useState(null)
   const [editName, setEditName] = useState('')
   const [editImage, setEditImage] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [imagePreview, setImagePreview] = useState(null)
+const router = useRouter()
   const fileInputRef = useRef(null)
-  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+
+
 
   useEffect(() => {
     fetchCategories()
@@ -62,8 +66,16 @@ export default function CategoryList() {
       toast.error("Falha ao deletar categoria, por favor, tente novamente.")
     } finally {
       setLoading(false)
-      setIsConfirmDeleteOpen(false) // Fechar modal de confirmação
+      setIsConfirmDeleteOpen(false)
     }
+  }
+
+  const handleAddCategory = () => {
+    setEditName('')
+    setEditImage(null)
+    setImagePreview(null)
+   router.push("/admin/categorias/adicionar")
+    
   }
 
   const openConfirmDeleteModal = (id) => {
@@ -135,97 +147,155 @@ export default function CategoryList() {
   }
 
   const SkeletonCard = () => (
-    <Card className="overflow-hidden">
-      <CardHeader className="p-0">
-        <Skeleton className="h-48 w-full" />
-      </CardHeader>
-      <CardContent className="p-4">
-        <Skeleton className="h-6 w-3/4" />
-      </CardContent>
-      <CardFooter className="p-4 flex justify-between gap-2">
-        <Skeleton className="h-10 w-20" />
-        <Skeleton className="h-10 w-20" />
-      </CardFooter>
-    </Card>
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden animate-pulse">
+      <div className="h-48 bg-gray-300"></div>
+      <div className="p-4">
+        <div className="h-6 bg-gray-200 w-3/4 mb-2"></div>
+        <div className="flex justify-between">
+          <div className="h-10 w-20 bg-gray-200"></div>
+          <div className="h-10 w-20 bg-gray-200"></div>
+        </div>
+      </div>
+    </div>
   )
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Categorias</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {loading ? (
-          Array(8).fill(0).map((_, index) => <SkeletonCard key={index} />)
-        ) : (
-          categories && categories.map((category) => (
-            <Card key={category.id} className="overflow-hidden">
-              <CardHeader className="p-0">
-                <div className="relative h-48 w-full">
-                  <Image
-                    src={category.imageUrl}
-                    alt={category.name}
-                    layout="fill"
-                    objectFit="cover"
-                  />
+    <div className="bg-gray-50 min-h-screen">
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-red-600 mb-4 sm:mb-0">Categorias</h1>
+          <Button className="bg-red-600 hover:bg-red-700 text-white w-full sm:w-auto" onClick={handleAddCategory}>
+            <PlusCircle className="mr-2" /> Nova Categoria
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          {loading ? (
+            Array(8).fill(0).map((_, index) => <SkeletonCard key={index} />)
+          ) : (
+            categories && categories.map((category) => (
+              <Card key={category.id} className="overflow-hidden transition-all hover:shadow-lg group">
+                <CardContent className="p-0">
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <Image
+                      src={category.imageUrl}
+                      alt={category.name}
+                      layout="fill"
+                      objectFit="cover"
+                      className="group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                </CardContent>
+                <CardFooter className="p-4 flex flex-col space-y-2">
+                  <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                    {category.name}
+                  </h2>
+                  <div className="flex justify-between space-x-2 w-full">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => handleEdit(category)} 
+                      className="flex-1 text-red-600 border-red-600 hover:bg-red-50"
+                    >
+                      <Edit2 className="mr-2 h-4 w-4" /> Editar
+                    </Button>
+                    <Button 
+                      variant="destructive" 
+                      size="sm" 
+                      onClick={() => openConfirmDeleteModal(category.id)}
+                      className="flex-1"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" /> Deletar
+                    </Button>
+                  </div>
+                </CardFooter>
+              </Card>
+            ))
+          )}
+        </div>
+
+        {/* Edit Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-red-600">Editar Categoria</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <Input
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                placeholder="Nome da categoria"
+                className="col-span-3 border-red-300 focus:border-red-500 focus:ring-red-500"
+              />
+              <div className="flex items-center gap-4">
+                <Input
+                  type="file"
+                  onChange={handleImageChange}
+                  accept="image/*"
+                  ref={fileInputRef}
+                  className="hidden"
+                />
+                <Button 
+                  onClick={() => fileInputRef.current.click()} 
+                  variant="outline"
+                  className="flex-1 text-red-600 border-red-600 hover:bg-red-50"
+                >
+                  {editImage ? 'Alterar Imagem' : 'Upload Imagem'}
+                </Button>
+                {editImage && <span className="text-sm text-gray-500">{editImage.name}</span>}
+              </div>
+              {imagePreview && (
+                <div className="mt-4">
+                  <Image src={imagePreview} alt="Preview" width={200} height={200} objectFit="cover" />
                 </div>
-              </CardHeader>
-              <CardContent className="p-4">
-                <CardTitle>{category.name}</CardTitle>
-              </CardContent>
-              <CardFooter className="p-4 flex justify-between gap-2">
-                <Button variant="outline" onClick={() => handleEdit(category)}>Edit</Button>
-                <Button variant="destructive" onClick={() => openConfirmDeleteModal(category.id)}>Delete</Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
+              )}
+            </div>
+            <DialogFooter>
+              <Button 
+                variant="outline" 
+                onClick={() => setIsEditDialogOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button 
+                onClick={handleEditSubmit} 
+                disabled={loading}
+                className="bg-red-600 hover:bg-red-700 text-white disabled:opacity-50"
+              >
+                {loading ? 'Salvando...' : 'Salvar'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+       
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-red-600">Confirmar Deleção</DialogTitle>
+            </DialogHeader>
+            <p className="text-gray-600">Tem certeza de que deseja deletar esta categoria?</p>
+            <DialogFooter>
+              <Button 
+                variant="outline" 
+                onClick={() => setIsConfirmDeleteOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button 
+                onClick={() => handleDelete(categoryToDelete)} 
+                variant="destructive"
+              >
+                Deletar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <ToastContainer />
       </div>
-
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Editar categoria</DialogTitle>
-          </DialogHeader>
-          <Input
-            value={editName}
-            onChange={(e) => setEditName(e.target.value)}
-            placeholder="Nome da categoria"
-            className="mb-4"
-          />
-          <div className="mb-4">
-            <Input
-              type="file"
-              onChange={handleImageChange}
-              accept="image/*"
-              ref={fileInputRef}
-              className="hidden"
-            />
-            <Button onClick={() => fileInputRef.current.click()}>
-              {editImage ? 'Escolha uma imagem' : 'Upload Image'}
-            </Button>
-            {editImage && <span className="ml-2">{editImage.name}</span>}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancelar</Button>
-            <Button onClick={handleEditSubmit} className="bg-red-600 hover:bg-red-700 disabled:cursor-not-allowed" disabled={loading}>{loading ? 'Salvando...' : 'Salvar'}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal de Confirmação de Deleção */}
-      <Dialog open={isConfirmDeleteOpen} onOpenChange={setIsConfirmDeleteOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirmar Deleção</DialogTitle>
-          </DialogHeader>
-          <p>Tem certeza de que deseja deletar esta categoria?</p>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsConfirmDeleteOpen(false)}>Cancelar</Button>
-            <Button onClick={() => handleDelete(categoryToDelete)} variant="destructive">Deletar</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <ToastContainer />
     </div>
   )
 }
