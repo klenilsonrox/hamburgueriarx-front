@@ -46,9 +46,7 @@ const Carrinho = () => {
           </div>
 
          <div className='max-h-[300px] lg:max-h-[500px] overflow-y-scroll my-4'>
-         {cart.map((item) => (
-             <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-             <ScrollArea className="h-[calc(100vh-300px)]">
+         <ScrollArea className="h-[calc(100vh-300px)]">
                {cart.map((item) => (
                  <div key={item.productId} className="p-4">
                    <div className="flex items-start space-x-4">
@@ -90,8 +88,6 @@ const Carrinho = () => {
                  </div>
                ))}
              </ScrollArea>
-           </div>
-          ))}
          </div>
           <div className='flex  fixed right-0 left-0 py-6 bottom-0 border-t'>
             <div className='w-full mx-auto  max-w-7xl'>
