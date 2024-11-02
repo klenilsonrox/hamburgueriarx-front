@@ -23,7 +23,7 @@ const PedidoDetalhe = ({ params }) => {
 
       if (response.ok) {
         const data = await response.json();
-        setPedido(data);
+        setPedido(data.order);
       } else {
         console.error('Pedido não encontrado.');
         setPedido(null); // Define como null para exibir "Pedido não encontrado"
@@ -38,7 +38,9 @@ const PedidoDetalhe = ({ params }) => {
   // UseEffect para inicializar o pedido
   useEffect(() => {
     fetchPedido();
-  }, [params.id]); // 'params.id' como dependência para atualização ao trocar de página
+  }, []); // 'params.id' como dependência para atualização ao trocar de página
+
+  console.log(pedido)
 
   // Função para calcular o total do pedido
   const calcularTotalPedido = () => {
