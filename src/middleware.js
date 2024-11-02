@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
-import { cookies } from 'next/headers';
 
 // Defina as rotas protegidas
 const protectedRoutes = ['/conta'];
@@ -8,7 +7,7 @@ const loginRoute = '/auth/entrar';
 
 export async function middleware(req) {
   const { nextUrl } = req;
-  const token = cookies().get('token')?.value;
+  const token = req.cookies().get('token')?.value;
 
   // Se o usuário tentar acessar a página de login e já estiver autenticado
   if (nextUrl.pathname === loginRoute) {
@@ -41,6 +40,7 @@ export async function middleware(req) {
       }
 
       return NextResponse.next();
+      
     } catch (error) {
       console.error("Erro ao verificar o token:", error.message);
       return NextResponse.redirect(new URL('/auth/entrar', req.url));

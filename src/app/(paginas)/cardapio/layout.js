@@ -8,7 +8,7 @@ export const metadata = {
   description: "Melhores Hamburguers do Brasil",
 };
 
-export default function LayoutCardapio({ children }) {
+export default function LayoutCardapio({ children,modal }) {
   return (
     <html lang="pt-BR">
       <body>
@@ -19,6 +19,9 @@ export default function LayoutCardapio({ children }) {
         </div>
        <div className="min-h-screen">
        {children}
+       <div>
+       {modal}
+       </div>
        </div>
         </CartProvider>
         <Footer />

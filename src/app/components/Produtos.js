@@ -95,7 +95,7 @@ const ProdutosIFoodStyle = () => {
                             </div>
                         ))
                         : produtos.filter(product => product.status === "AVAILABLE").map((product) => (
-                            <div 
+                            <Link href={`/cardapio/${product.id}`}
                                 key={product.id} 
                                 className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
                             >
@@ -129,7 +129,7 @@ const ProdutosIFoodStyle = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                 </div>
 
@@ -155,8 +155,8 @@ const ProdutosIFoodStyle = () => {
                 </div>
             </div>
 
-            {/* Product Details Modal */}
-            <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
+            
+            {/* <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
                 <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
                     {selectedProduct && (
                         <>
@@ -200,7 +200,7 @@ const ProdutosIFoodStyle = () => {
                                     </div>
                                 )}
 
-                                {/* Quantity Selector */}
+                      
                                 <div className="flex items-center justify-between mt-4">
                                     <span className="text-gray-700 font-medium">Quantidade:</span>
                                     <div className="flex items-center space-x-2">
@@ -224,7 +224,7 @@ const ProdutosIFoodStyle = () => {
                                     </div>
                                 </div>
 
-                                {/* Observation Field */}
+                            
                                 <div className="mt-4">
                                     <label 
                                         htmlFor="product-observation" 
@@ -262,7 +262,7 @@ const ProdutosIFoodStyle = () => {
                         </>
                     )}
                 </DialogContent>
-            </Dialog>
+            </Dialog> */}
 
             {/* Cart Floating Button */}
             {cart && cart.length > 0 && (
