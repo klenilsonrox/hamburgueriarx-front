@@ -123,7 +123,7 @@ console.log(response)
         <div className="mb-6">
           <h3 className="text-lg font-semibold">Produtos</h3>
           <div className="divide-y divide-gray-200">
-            {pedido.products.map((product) => (
+            {pedido && pedido.products.map((product) => (
               <div key={product.id} className="py-4 flex items-center">
                 <img
                   src={product.imageUrl}
